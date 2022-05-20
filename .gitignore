@@ -34,3 +34,6 @@
 # VSCode Config Folders
 .vscode
 include-foreign
+
+# Exclude build directory
+build
