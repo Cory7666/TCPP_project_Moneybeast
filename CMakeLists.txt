@@ -10,6 +10,7 @@ include_directories(
 add_executable(
     moneybeast-cli
     main.cxx
+    mbtypes.cxx
     include/main.hxx
     include/mbtypes.hxx
 )
