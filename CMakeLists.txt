@@ -9,8 +9,34 @@ include_directories(
 
 add_executable(
     moneybeast-cli
-    main.cxx
-    mbtypes.cxx
-    include/main.hxx
-    include/mbtypes.hxx
+    "main.cxx"
+    "include/main.hxx"
+)
+
+
+
+############################
+### Sublibrary with types ##
+############################
+
+include_directories (
+    mbtypes PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+    "${CMAKE_CURRENT_SOURCE_DIR}/"
+)
+
+add_library (
+    mbtypes
+    "include/mbtypes.hxx"
+    "mbtypes.cxx"
+)
+
+
+#!mbtypes
+
+
+# linking sublibraries with main project
+target_link_libraries (
+    moneybeast-cli PUBLIC
+    mbtypes
 )

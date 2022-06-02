@@ -168,7 +168,7 @@ namespace Moneybeast
      * @brief Bank client.
      *
      */
-    class Client final : public Person
+    class Client : public Person
     {
     public:
         /**
@@ -248,7 +248,7 @@ namespace Moneybeast
      * @brief A particular employee of the card issuance department.
      *
      */
-    class CaStaff final : public Person
+    class CaStaff final : public Client
     {
     public:
         /**
@@ -266,7 +266,7 @@ namespace Moneybeast
             const std::string last_name,
             const std::string email,
             const std::string patronymic = "")
-            : Person(pass, first_name, last_name, email, patronymic)
+            : Client (pass, first_name, last_name, email, patronymic)
         { }
 
         /**
@@ -283,7 +283,7 @@ namespace Moneybeast
      * @brief A particular employee of the credit/deposit issuance department.
      *
      */
-    class CDStaff final : public Person
+    class CDStaff final : public Client
     {
     public:
         /**
@@ -301,7 +301,7 @@ namespace Moneybeast
             const std::string last_name,
             const std::string email,
             const std::string patronymic = "")
-            : Person(pass, first_name, last_name, email, patronymic)
+            : Client (pass, first_name, last_name, email, patronymic)
         { }
 
         /**
