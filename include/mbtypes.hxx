@@ -62,6 +62,14 @@ namespace Moneybeast
         Passport(const char n[10]);
     };
 
+    /**
+     * @brief Access Token.
+     * 
+     */
+    struct AccessToken
+    {
+        char value[3];
+    };
 
 
 
@@ -235,12 +243,22 @@ namespace Moneybeast
         { return inner_wallet_; }
         inline void
         setWallet(const Money &money_amount)
-        { inner_wallet_ = money_amount; } 
+        { inner_wallet_ = money_amount; }
+
+        /**
+         * @brief Get the Access Token object.
+         * 
+         * @return AccessToken 
+         */
+        inline AccessToken
+        getAccessToken() const
+        { return access_token_; }
 
     private:
         std::map<AccountId, Account*> accounts_;
         std::map<CardNum, Card*> cards_;
 
+        AccessToken access_token_;
         Money inner_wallet_;
     };
 

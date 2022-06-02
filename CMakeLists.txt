@@ -31,6 +31,23 @@ add_library (
     "mbtypes.cxx"
 )
 
+#!mbtypes
+
+###################################
+### Sublibrary with system logic ##
+###################################
+
+include_directories (
+    mbsystem PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+    "${CMAKE_CURRENT_SOURCE_DIR}/"
+)
+
+add_library (
+    mbsystem
+    "include/mbsystem.hxx"
+    "mbsystem.cxx"
+)
 
 #!mbtypes
 
@@ -39,4 +56,5 @@ add_library (
 target_link_libraries (
     moneybeast-cli PUBLIC
     mbtypes
+    mbsystem
 )
