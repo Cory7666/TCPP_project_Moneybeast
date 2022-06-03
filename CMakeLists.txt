@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project (moneybeast-cli VERSION 0.1.0)
+set (CMAKE_CXX_STANDARD 17)
 
 include_directories(
     moneybeast-cli PUBLIC
@@ -10,7 +11,9 @@ include_directories(
 add_executable(
     moneybeast-cli
     "main.cxx"
+    "application.cxx"
     "include/main.hxx"
+    "include/application.hxx"
 )
 
 
@@ -57,4 +60,5 @@ target_link_libraries (
     moneybeast-cli PUBLIC
     mbtypes
     mbsystem
+    -lboost_program_options
 )

@@ -26,7 +26,7 @@ void Client::removeAccount(const AccountId& account_id)
     accounts_.erase(account_id);
 }
 
-Card* Client::getCardByNumber(CardNum &&card_num) const
+Card* Client::getCardByNumber(const CardNum &card_num) const
 {
     auto t = cards_.find (card_num);
     if (t != cards_.end())
@@ -35,7 +35,7 @@ Card* Client::getCardByNumber(CardNum &&card_num) const
         return nullptr;
 }
 
-Account* Client::getAccountById(AccountId &&account_id) const
+Account* Client::getAccountById(const AccountId &account_id) const
 {
     auto t = accounts_.find (account_id);
     if (t != accounts_.end())
@@ -65,14 +65,14 @@ Account* CDStaff::openUnnamedCredit(
             const Client *client,
             const Money& money_amount, const Interest& interest)
 {
-    return new Account{(AccountId) 0, money_amount, -interest};
+    return new Account{0, money_amount, -interest};
 }
 
 Account* CDStaff::openUnnamedDeposit(
             const Client *client,
             const Money& money_amount, const Interest& interest)
 {
-    return new Account{(AccountId) 0, money_amount, interest};
+    return new Account{0, money_amount, interest};
 }
 
 
@@ -132,14 +132,19 @@ Passport::Passport (const char n[10])
 
 
 
-AccessToken::AccessToken (const char *v)
+AccessToken::AccessToken (const char v[3])
 {
-    for (int i = 0; i < 3 && v[i] != 0; i++)
-        value[i] = v[i];
+    std::memcpy (value, v, 3);
 }
 
 AccessToken::AccessToken ()
+    : AccessToken ("000")
+{ }
+
+bool AccessToken::isSet() const
 {
-    for (int i = 0; i < 3 && value[i] != 0; i++)
-        value[i] = '0';
+    if (*this == AccessToken{"000"})
+        return false;
+    else
+        return true;
 }

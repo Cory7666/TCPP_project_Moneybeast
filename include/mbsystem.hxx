@@ -32,7 +32,7 @@ namespace Moneybeast
          * @return true if success else false
          */
         bool
-        try_login (std::string &&login, std::string &&password,
+        try_login (const std::string &login, const std::string &password,
         Moneybeast::AccessToken &access_token);
 
         /**
@@ -40,7 +40,7 @@ namespace Moneybeast
          * 
          * @param client
          */
-        void
+        bool
         update_personal_info (Moneybeast::Client &client);
 
         /**
@@ -48,7 +48,7 @@ namespace Moneybeast
          * 
          * @param client 
          */
-        void
+        bool
         update_cards_info (Moneybeast::Client &client);
         
         /**
@@ -56,7 +56,7 @@ namespace Moneybeast
          * 
          * @param client 
          */
-        void
+        bool
         update_accounts_info (Moneybeast::Client &client);
 
 
@@ -67,8 +67,8 @@ namespace Moneybeast
          * @param access_token 
          * @param list 
          */
-        void
-        get_castaff (Moneybeast::AccessToken &&access_token,
+        bool
+        get_castaff (const Moneybeast::AccessToken &access_token,
                      std::vector<Moneybeast::CaStaff> &list);
         
         /**
@@ -77,8 +77,8 @@ namespace Moneybeast
          * @param access_token 
          * @param list 
          */
-        void
-        get_cdstaff (Moneybeast::AccessToken &&access_token,
+        bool
+        get_cdstaff (const Moneybeast::AccessToken &access_token,
                      std::vector<Moneybeast::CDStaff> &list);
     }
 

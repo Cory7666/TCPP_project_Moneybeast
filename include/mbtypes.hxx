@@ -31,6 +31,9 @@ namespace Moneybeast
     class CDStaff;
     class Client;
     class Person;
+    struct AccessToken;
+    struct CardNum;
+    struct Passport;
     
 
 
@@ -45,9 +48,17 @@ namespace Moneybeast
 
         CardNum() { }
         CardNum(const char v[16]);
+        CardNum (const std::string &v)
+            : CardNum (v.c_str())
+        { }
 
         bool operator==(const CardNum &obj) const;
         bool operator<(const CardNum &obj) const;
+
+        explicit operator std::string () const
+        {
+            return std::string{value, 0, 16};
+        }
     };
 
     /**
@@ -58,8 +69,18 @@ namespace Moneybeast
     {
         char num[10];
 
-        Passport() { }
+        Passport()
+            : Passport ("0000000000")
+        { }
         Passport(const char n[10]);
+        Passport (const std::string &n)
+            : Passport (n.c_str())
+        { }
+
+        explicit operator std::string () const
+        {
+            return std::string{num, 0, 10};
+        }
     };
 
     /**
@@ -71,7 +92,10 @@ namespace Moneybeast
         char value[3];
 
         AccessToken();
-        AccessToken (const char *v);
+        AccessToken (const char v[3]);
+        AccessToken (const std::string &v)
+            : AccessToken (v.c_str())
+        { }
 
         constexpr bool
         operator== (const AccessToken &obj) const
@@ -82,6 +106,13 @@ namespace Moneybeast
             else
                 return false;
         }
+
+        explicit operator std::string () const
+        {
+            return std::string{value, 0, 3};
+        }
+
+        bool isSet() const;
     };
 
 
@@ -130,9 +161,17 @@ namespace Moneybeast
          */
         inline Passport
         getPassportNum() const
-        {
-            return pass_;
-        }
+        { return pass_; }
+
+        /**
+         * @brief Set the Passport Num.
+         * 
+         * @param pass 
+         */
+        inline void
+        setPassportNum (const Passport &pass)
+        { pass_ = pass; }
+
         /**
          * @brief Get the First Name object.
          *
@@ -140,38 +179,69 @@ namespace Moneybeast
          */
         inline std::string
         getFirstName() const
-        {
-            return first_name_;
-        }
+        { return first_name_; }
+
         /**
-         * @brief Get the Last Name object.
+         * @brief Set the First Name.
+         * 
+         * @param first_name 
+         */
+        inline void
+        setFirstName (const std::string &first_name)
+        { first_name_ = first_name; }
+
+        /**
+         * @brief Get the Last Name.
          *
          * @return std::string
          */
         inline std::string getLastName() const
-        {
-            return last_name_;
-        }
+        { return last_name_; }
+
         /**
-         * @brief Get the Patronymic object.
+         * @brief Set the Last Name.
+         * 
+         * @param first_name 
+         */
+        inline void
+        setLastName (const std::string &last_name)
+        { last_name_ = last_name; }
+
+        /**
+         * @brief Get the Patronymic.
          *
          * @return std::string
          */
         inline std::string
         getPatronymic() const
-        {
-            return patronymic_;
-        }
+        { return patronymic_; }
+
         /**
-         * @brief Get the Email object.
+         * @brief Set the Patronymic.
+         * 
+         * @param patronymic New patronymic.
+         */
+        inline void
+        setPatronymic (const std::string &patronymic)
+        { patronymic_ = patronymic; }
+
+        /**
+         * @brief Get the Email.
          *
          * @return std::string
          */
         inline std::string
         getEmail() const
-        {
-            return email_;
-        }
+        { return email_; }
+
+        /**
+         * @brief Set the Email.
+         * 
+         * @param email New email.
+         */
+        inline void
+        setEmail (const std::string &email)
+        { email_ = email; }
 
         inline Person&
         operator= (const Person &obj)
@@ -230,8 +300,10 @@ namespace Moneybeast
             const std::string first_name,
             const std::string last_name,
             const std::string email,
-            const std::string patronymic = "")
-            : Person(pass, first_name, last_name, email, patronymic)
+            const std::string patronymic = "",
+            const AccessToken &token = AccessToken{"000"})
+            : Person(pass, first_name, last_name, email, patronymic),
+              access_token_(token), inner_wallet_ (0.0)
         {
         }
 
@@ -267,14 +339,14 @@ namespace Moneybeast
          * @param card_num Card number.
          * @return Card* Pointer to card if found.
          */
-        Card* getCardByNumber(CardNum &&card_num) const;
+        Card* getCardByNumber(const CardNum &card_num) const;
         /**
          * @brief Get the Account By Id object.
          *
          * @param account_id Account unique indentificator.
          * @return Account* Pointer to the account if found.
          */
-        Account* getAccountById(AccountId &&account_id) const;
+        Account* getAccountById(const AccountId &account_id) const;
         inline Money
         getWalletState() const
         { return inner_wallet_; }
@@ -290,6 +362,41 @@ namespace Moneybeast
         inline AccessToken
         getAccessToken() const
         { return access_token_; }
+
+        /**
+         * @brief Set the Access Token.
+         * 
+         * @param token New token value.
+         */
+        inline void
+        setAccessToken(const AccessToken& token)
+        { access_token_ = token; }
+
+        /**
+         * @brief Get the Login.
+         * 
+         * @return std::string 
+         */
+        inline std::string
+        getLogin() const
+        { return login_; }
+
+        /**
+         * @brief Set the Login.
+         * 
+         * @param token New login value.
+         */
+        inline void
+        setLogin(const std::string &login)
+        { login_ = login; }
+
+        inline std::map<AccountId, Account*>&
+        getAccountsMap()
+        { return accounts_; }
+
+        inline std::map<CardNum, Card*>&
+        getCardsMap()
+        { return cards_; }
 
         inline Client&
         operator= (const Client &obj)
@@ -313,6 +420,7 @@ namespace Moneybeast
 
         AccessToken access_token_;
         Money inner_wallet_;
+        std::string login_;
     };
 
     /**
@@ -350,8 +458,9 @@ namespace Moneybeast
             const std::string &first_name,
             const std::string &last_name,
             const std::string &email,
-            const std::string &patronymic = "")
-            : Client (pass, first_name, last_name, email, patronymic)
+            const std::string &patronymic = "",
+            const AccessToken &token = AccessToken{"000"})
+            : Client (pass, first_name, last_name, email, patronymic, token)
         { }
 
         /**
@@ -415,8 +524,9 @@ namespace Moneybeast
             const std::string first_name,
             const std::string last_name,
             const std::string email,
-            const std::string patronymic = "")
-            : Client (pass, first_name, last_name, email, patronymic)
+            const std::string patronymic = "",
+            const AccessToken &token = AccessToken{"000"})
+            : Client (pass, first_name, last_name, email, patronymic, token)
         { }
 
         /**
@@ -581,5 +691,6 @@ namespace Moneybeast
 }
 
 namespace mb = Moneybeast;
+
 
 #endif //! MBTYPES_HXX
