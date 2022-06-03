@@ -2,7 +2,7 @@
  * @file mbtypes.hxx
  * @author Alex Alexeev <activity.alex69985@gmail.com>
  * @brief
- * @version 0.1
+ * @version 0.3
  * @date 2022-05-21
  *
  * @copyright Copyright (c) 2022
@@ -69,6 +69,19 @@ namespace Moneybeast
     struct AccessToken
     {
         char value[3];
+
+        AccessToken();
+        AccessToken (const char *v);
+
+        constexpr bool
+        operator== (const AccessToken &obj) const
+        {
+            if (value[0] == obj.value[0] && value[1] == obj.value[1]
+             && value[2] == obj.value[2])
+                return true;
+            else
+                return false;
+        }
     };
 
 
@@ -80,6 +93,16 @@ namespace Moneybeast
     class Person
     {
     public:
+        Person() {}
+        Person (const Person &obj)
+        {
+            this->pass_ = obj.pass_;
+            this->first_name_ = obj.first_name_;
+            this->last_name_ = obj.last_name_;
+            this->patronymic_ = obj.patronymic_;
+            this->email_ = obj.email_;
+        }
+
         /**
          * @brief Construct a new Person object.
          *
@@ -149,27 +172,27 @@ namespace Moneybeast
         {
             return email_;
         }
-        /**
-         * @brief Get the Access Key object.
-         *
-         * @return std::string
-         */
-        inline std::string
-        getAccessKey() const
+
+        inline Person&
+        operator= (const Person &obj)
         {
-            return key_;
+            this->pass_ = obj.pass_;
+            this->first_name_ = obj.first_name_;
+            this->last_name_ = obj.last_name_;
+            this->patronymic_ = obj.patronymic_;
+            this->email_ = obj.email_;
+
+            return *this;
         }
 
     protected:
-        const Passport pass_;
-        const std::string
+        Passport pass_;
+        std::string
             first_name_,
             last_name_,
             patronymic_;
 
-        const std::string
-            email_,
-            key_;
+        std::string email_;
     };
 
     /**
@@ -179,6 +202,20 @@ namespace Moneybeast
     class Client : public Person
     {
     public:
+        Client() {}
+        Client (const Client &obj)
+        {
+            this->pass_ = obj.pass_;
+            this->first_name_ = obj.first_name_;
+            this->last_name_ = obj.last_name_;
+            this->patronymic_ = obj.patronymic_;
+            this->email_ = obj.email_;
+            this->accounts_ = obj.accounts_;
+            this->cards_ = obj.cards_;
+            this->access_token_ = obj.access_token_;
+            this->inner_wallet_ = obj.inner_wallet_;
+        }
+
         /**
          * @brief Construct a new Client object.
          *
@@ -230,14 +267,14 @@ namespace Moneybeast
          * @param card_num Card number.
          * @return Card* Pointer to card if found.
          */
-        Card* getCardByNumber(CardNum &card_num) const;
+        Card* getCardByNumber(CardNum &&card_num) const;
         /**
          * @brief Get the Account By Id object.
          *
          * @param account_id Account unique indentificator.
          * @return Account* Pointer to the account if found.
          */
-        Account* getAccountById(AccountId &account_id) const;
+        Account* getAccountById(AccountId &&account_id) const;
         inline Money
         getWalletState() const
         { return inner_wallet_; }
@@ -254,7 +291,23 @@ namespace Moneybeast
         getAccessToken() const
         { return access_token_; }
 
-    private:
+        inline Client&
+        operator= (const Client &obj)
+        {
+            this->pass_ = obj.pass_;
+            this->first_name_ = obj.first_name_;
+            this->last_name_ = obj.last_name_;
+            this->patronymic_ = obj.patronymic_;
+            this->email_ = obj.email_;
+            this->accounts_ = obj.accounts_;
+            this->cards_ = obj.cards_;
+            this->access_token_ = obj.access_token_;
+            this->inner_wallet_ = obj.inner_wallet_;
+
+            return *this;
+        }
+
+    protected:
         std::map<AccountId, Account*> accounts_;
         std::map<CardNum, Card*> cards_;
 
@@ -269,6 +322,20 @@ namespace Moneybeast
     class CaStaff final : public Client
     {
     public:
+        CaStaff() {}
+        CaStaff (const CaStaff &obj)
+        {
+            this->pass_ = obj.pass_;
+            this->first_name_ = obj.first_name_;
+            this->last_name_ = obj.last_name_;
+            this->patronymic_ = obj.patronymic_;
+            this->email_ = obj.email_;
+            this->accounts_ = obj.accounts_;
+            this->cards_ = obj.cards_;
+            this->access_token_ = obj.access_token_;
+            this->inner_wallet_ = obj.inner_wallet_;
+        }
+
         /**
          * @brief Construct a new Ca Staff object.
          *
@@ -280,10 +347,10 @@ namespace Moneybeast
          */
         CaStaff(
             const Passport &pass,
-            const std::string first_name,
-            const std::string last_name,
-            const std::string email,
-            const std::string patronymic = "")
+            const std::string &first_name,
+            const std::string &last_name,
+            const std::string &email,
+            const std::string &patronymic = "")
             : Client (pass, first_name, last_name, email, patronymic)
         { }
 
@@ -295,6 +362,22 @@ namespace Moneybeast
          * @return Card* Card pointer.
          */
         Card *openUnnamedCard(const Client *client, Account *account);
+
+        inline CaStaff&
+        operator= (const CaStaff &obj)
+        {
+            this->pass_ = obj.pass_;
+            this->first_name_ = obj.first_name_;
+            this->last_name_ = obj.last_name_;
+            this->patronymic_ = obj.patronymic_;
+            this->email_ = obj.email_;
+            this->accounts_ = obj.accounts_;
+            this->cards_ = obj.cards_;
+            this->access_token_ = obj.access_token_;
+            this->inner_wallet_ = obj.inner_wallet_;
+
+            return *this;
+        }
     };
 
     /**
@@ -304,6 +387,20 @@ namespace Moneybeast
     class CDStaff final : public Client
     {
     public:
+        CDStaff() {}
+        CDStaff (const CDStaff &obj)
+        {
+            this->pass_ = obj.pass_;
+            this->first_name_ = obj.first_name_;
+            this->last_name_ = obj.last_name_;
+            this->patronymic_ = obj.patronymic_;
+            this->email_ = obj.email_;
+            this->accounts_ = obj.accounts_;
+            this->cards_ = obj.cards_;
+            this->access_token_ = obj.access_token_;
+            this->inner_wallet_ = obj.inner_wallet_;
+        }
+
         /**
          * @brief Construct a new CDStaff object.
          *
@@ -344,6 +441,22 @@ namespace Moneybeast
         Account *openUnnamedDeposit(
             const Client *client,
             const Money& money_amount, const Interest& interest);
+        
+        inline CDStaff&
+        operator= (const CDStaff &obj)
+        {
+            this->pass_ = obj.pass_;
+            this->first_name_ = obj.first_name_;
+            this->last_name_ = obj.last_name_;
+            this->patronymic_ = obj.patronymic_;
+            this->email_ = obj.email_;
+            this->accounts_ = obj.accounts_;
+            this->cards_ = obj.cards_;
+            this->access_token_ = obj.access_token_;
+            this->inner_wallet_ = obj.inner_wallet_;
+
+            return *this;
+        }
     };
 
     /**
@@ -359,8 +472,8 @@ namespace Moneybeast
          * @param money_amount Money amount.
          * @param interest Interest.
          */
-        Account( const Money &money_amount, Interest interest)
-            : money_amount_(money_amount), interest_(interest)
+        Account(const AccountId &id, const Money &money_amount, const Interest &interest)
+            : id_(id), money_amount_(money_amount), interest_(interest)
         { }
 
         /**

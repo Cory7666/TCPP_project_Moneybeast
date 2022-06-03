@@ -49,7 +49,7 @@ add_library (
     "mbsystem.cxx"
 )
 
-#!mbtypes
+#!mbsystem
 
 
 # linking sublibraries with main project
